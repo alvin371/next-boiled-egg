@@ -1,10 +1,11 @@
 import { ThemeProvider } from "@/context/theme";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-
+import "../styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { Skeleton } from "antd";
+import FrontOfficeLayout from "@/components/templates/page-layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +47,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <AntdRegistry>
-            <Suspense fallback={<Skeleton />}>{children}</Suspense>
+            <FrontOfficeLayout>
+              <Suspense fallback={<Skeleton />}>{children}</Suspense>
+            </FrontOfficeLayout>
           </AntdRegistry>
         </ThemeProvider>
       </body>
