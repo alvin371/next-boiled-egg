@@ -1,0 +1,13 @@
+{
+  "extends": "next/core-web-vitals",
+  "globals": {
+    "React": "writable",
+    "RequestInfo": "writable",
+    "RequestInit": "writable"
+  },
+  "rules": {
+    "no-undef": "error",
+    "no-unused-vars": "warn",
+    "import/no-deprecated": "warn"
+  }
+}
