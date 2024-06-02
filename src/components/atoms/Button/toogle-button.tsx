@@ -1,50 +1,40 @@
-import { LeftSquareOutlined, RightSquareOutlined } from '@ant-design/icons';
-import React from 'react';
-import styled from 'styled-components';
+import { LeftSquareOutlined, RightSquareOutlined } from "@ant-design/icons";
+import React from "react";
+import { cva } from "class-variance-authority";
 
 interface IToggleButton {
-    isActivityVisible: boolean;
-    setIsActivityVisible: (value: boolean) => void;
-    widgetWidth: string;
-    setWidgetWidth: (value: string) => void;
-    onClick?: () => void;
+  isActivityVisible: boolean;
+  //   eslint-disable-next-line no-unused-vars
+  setIsActivityVisible: (value: boolean) => void;
+  widgetWidth: string;
+  //   eslint-disable-next-line no-unused-vars
+  setWidgetWidth: (value: string) => void;
+  onClick?: () => void;
 }
-const Button = styled.div`
-    background-color: #006cb8;
-    border-radius: 10px 0px 0px 10px;
-    height: 32px;
-    width: 28px;
-    position: absolute;
-    top: 10px;
-    right: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    cursor: pointer;
-    svg {
-        color: white;
+
+const buttonStyles = cva(
+  "bg-[#006cb8] rounded-l-lg h-8 w-7 absolute top-2.5 right-0 flex items-center justify-center z-10 cursor-pointer"
+);
+
+const ToggleButton: React.FC<IToggleButton> = (props) => {
+  const toggleActivityVisibility = () => {
+    if (props.onClick) {
+      props.onClick();
     }
-`;
-const ToggleButton = (props: IToggleButton) => {
-    const toggleActivityVisibility = () => {
-        if (props.onClick) {
-            props.onClick();
-        }
 
-        props.setIsActivityVisible(!props.isActivityVisible);
-        props.setWidgetWidth(props.isActivityVisible ? '100%' : '1800px');
-    };
+    props.setIsActivityVisible(!props.isActivityVisible);
+    props.setWidgetWidth(props.isActivityVisible ? "100%" : "1800px");
+  };
 
-    return (
-        <Button onClick={toggleActivityVisibility}>
-            {props.isActivityVisible ? (
-                <LeftSquareOutlined rev={''} color="white" />
-            ) : (
-                <RightSquareOutlined rev={''} color="#fff" />
-            )}
-        </Button>
-    );
+  return (
+    <div className={buttonStyles()} onClick={toggleActivityVisibility}>
+      {props.isActivityVisible ? (
+        <LeftSquareOutlined rev={""} className="text-white" />
+      ) : (
+        <RightSquareOutlined rev={""} className="text-white" />
+      )}
+    </div>
+  );
 };
 
 export default ToggleButton;

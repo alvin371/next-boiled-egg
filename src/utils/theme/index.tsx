@@ -2,7 +2,7 @@ import { RowProps, SpaceProps } from "antd";
 import type { ThemeConfig } from "antd/es/config-provider/context";
 import type { CSSProperties } from "react";
 
-export const themeColors = {
+const themeColors = {
   primary: "#2D87C6",
   secondary: "",
   success: "",
@@ -11,16 +11,16 @@ export const themeColors = {
   info: "#FFF"
 };
 
-export const darkThemeColors = {
+const darkThemeColors = {
   primary: "#001213"
 };
 
-export const iconActionTableStyle: CSSProperties = {
+const iconActionTableStyle: CSSProperties = {
   color: themeColors.primary,
   fontSize: "14px"
 };
 
-export const sidebarThemeConfig: ThemeConfig = {
+const sidebarThemeConfig: ThemeConfig = {
   components: {
     Menu: {
       itemColor: "#001213",
@@ -34,11 +34,11 @@ export const sidebarThemeConfig: ThemeConfig = {
   }
 };
 
-export const defaultGutter: RowProps["gutter"] = [16, 16];
+const defaultGutter: RowProps["gutter"] = [16, 16];
 
-export const defaultSizeSpace: SpaceProps["size"] = "middle";
+const defaultSizeSpace: SpaceProps["size"] = "middle";
 
-export const globalThemeConfig: ThemeConfig = {
+const globalThemeConfig: ThemeConfig = {
   token: {
     colorPrimary: themeColors.primary
   },
@@ -48,4 +48,14 @@ export const globalThemeConfig: ThemeConfig = {
       controlItemBgActiveHover: "#E6FFFB"
     }
   }
+};
+
+export {
+  themeColors,
+  darkThemeColors,
+  sidebarThemeConfig,
+  defaultGutter,
+  defaultSizeSpace,
+  globalThemeConfig,
+  iconActionTableStyle
 };
