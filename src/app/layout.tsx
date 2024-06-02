@@ -15,8 +15,31 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const metadata = {
+    title: "Next Boiled Egg",
+    description: "Alvin Dimas Satria Boilerplate for Next.js",
+    generator: "Next.js",
+    manifest: "/manifest.webmanifest",
+    keywords: [],
+    authors: [
+      {
+        name: "Alvin Dimas Satria",
+        url: "https://www.linkedin.com/in/alvindimas/"
+      }
+    ]
+  };
+
   return (
     <html lang="en">
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        {/*TODO: Add other meta tags as needed */}
+        {metadata.manifest && <link rel="manifest" href={metadata.manifest} />}
+        {metadata.keywords && (
+          <meta name="keywords" content={metadata.keywords.join(", ")} />
+        )}
+      </head>
       <body>
         <ThemeProvider>
           <AntdRegistry>
