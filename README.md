@@ -6,7 +6,7 @@ Figma will follow and the creation will be based on that
 
 First, OFC what ever your package manager, do the install.
 
-No need to change env because is not being setup yet
+dont forget to setup ENV file
 
 ```bash
 npm run dev
