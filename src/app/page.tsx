@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
 const IndexPage = () => {
-  return redirect("/dashboard");
+  return redirect("/user");
 };
 export default IndexPage;

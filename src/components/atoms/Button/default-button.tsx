@@ -2,11 +2,24 @@ import { Button as AntdButton, ButtonProps } from "antd";
 import React from "react";
 import Link from "next/link";
 import { IsMobileScreen } from "@/utils/utils";
+import { cva } from "class-variance-authority";
 
 export type TProps = ButtonProps & {
   icon?: React.ReactNode;
   responsive?: boolean;
 };
+
+const buttonStyles = cva("flex items-center justify-center", {
+  variants: {
+    responsive: {
+      true: "hidden md:flex",
+      false: "flex"
+    }
+  },
+  defaultVariants: {
+    responsive: true
+  }
+});
 
 const Button: React.FC<TProps> = ({
   icon,
@@ -23,11 +36,9 @@ const Button: React.FC<TProps> = ({
       <Link href={href}>
         <AntdButton
           icon={icon}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
+          className={buttonStyles({
+            responsive: isMobile ? responsive : false
+          })}
           {...rest}
         >
           {showChildren && children}
@@ -39,11 +50,7 @@ const Button: React.FC<TProps> = ({
   return (
     <AntdButton
       icon={icon}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
+      className={buttonStyles({ responsive: isMobile ? responsive : false })}
       {...rest}
     >
       {showChildren && children}
