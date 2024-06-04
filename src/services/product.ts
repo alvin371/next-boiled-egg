@@ -50,6 +50,11 @@ export const createProduct = async (data: ProductItem) => {
   return response.data;
 };
 
+export const editProduct = async (id: number, data: ProductItem) => {
+  const response = await API.put(`${ENDPOINTS.PRODUCT}/${id}`, data);
+  return response.data;
+}
+
 export const deleteProduct = async (id: number) => {
   await API.delete(`${ENDPOINTS.PRODUCT}/${id}`);
 }

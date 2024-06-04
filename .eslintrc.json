@@ -8,7 +8,7 @@
   "rules": {
     "no-undef": "error",
     "no-unused-vars": "warn",
-    "import/no-deprecated": "warn",
-    "no-explicit-any": "warn"
+    "import/no-deprecated": "warn"
+    // "no-explicit-any": "warn"
   }
 }
