@@ -1,6 +1,13 @@
 import { ENDPOINTS } from "@/constant/endpoint";
 import { API } from "@/utils";
 
+export interface Category {
+  id: number;
+  name: string;
+  image: string;
+}
+
+
 export const getListCategories = () => ({
   queryKey: [ENDPOINTS.CATEGORIES],
   queryFn: async () => {

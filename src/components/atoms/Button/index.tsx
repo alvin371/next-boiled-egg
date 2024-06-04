@@ -1,4 +1,4 @@
-import Button from "./default-button";
+import Button from "./button";
 import ToggleButton from "./toogle-button";
 
 export { Button, ToggleButton };

@@ -22,7 +22,7 @@ export const API = axios.create({
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log(error, "erroraerawrawe");
-    // return Promise.reject(error);
+    console.log("error", error);
+    return Promise.reject(error);
   }
 );
