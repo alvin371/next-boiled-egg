@@ -10,20 +10,31 @@ import {
   message,
   Upload,
   Space,
-  Spin,
   Select,
+  Spin,
 } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { UseMutationResult, useMutation } from "@tanstack/react-query";
-import { Category, UploadResponse, uploadImage } from "@/services";
+import {
+  UseMutationResult,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  Category,
+  ProductItem,
+  UploadResponse,
+  createProduct,
+  editProduct,
+  uploadImage,
+} from "@/services";
 import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 
 interface ModalFormProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: FormData) => void;
+  id?: number;
   initialData?: FormData;
   categories?: Category[];
 }
@@ -41,25 +52,27 @@ type FormData = z.infer<typeof formSchema>;
 const ModalForm: React.FC<ModalFormProps> = ({
   visible,
   onClose,
-  onSubmit,
   initialData,
   categories,
+  id,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
     setValue,
+    getValues,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: initialData?.title ? initialData.title :"",
+      title: initialData?.title ? initialData.title : "",
       price: initialData?.price || undefined,
       description: initialData?.description || "",
       categoryId: initialData?.categoryId || undefined,
-      images: [""],
+      images: initialData?.images || [""],
     },
   });
 
@@ -68,10 +81,51 @@ const ModalForm: React.FC<ModalFormProps> = ({
       reset(initialData);
     }
   }, [initialData, reset]);
+
+  const createProductMutation = useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      message.success("Product created successfully");
+      queryClient.refetchQueries();
+    },
+    onError: () => {
+      message.error("Failed to create product");
+    },
+  });
+  const handleCreateProduct = async (productData: ProductItem) => {
+    createProductMutation.mutate(productData);
+  };
+
+  const editProductMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: ProductItem }) =>
+      editProduct(id, data),
+    onSuccess: () => {
+      message.success("Product updated successfully");
+      queryClient.refetchQueries();
+    },
+    onError: () => {
+      message.error("Failed to update product");
+    },
+  });
+
+  const handleEditProduct = async (id: number, productData: ProductItem) => {
+    editProductMutation.mutate({ id, data: productData });
+  };
+
   const handleOk = async (data: FormData) => {
-    await onSubmit(data);
-    
-    onClose();
+    setIsLoading(true);
+    try {
+      if (id) {
+        await editProductMutation.mutateAsync({ id, data });
+      } else {
+        await createProductMutation.mutateAsync(data);
+      }
+      reset();
+    } catch (error) {
+      message.error("Failed to process the request");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const mutation: UseMutationResult<UploadResponse, Error, File> = useMutation({
@@ -97,7 +151,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     <Modal
       title={initialData ? "Edit Product" : "Create Product"}
       open={visible}
-      onCancel={() =>{
+      onCancel={() => {
         reset({
           title: "",
           price: undefined,
@@ -207,25 +261,25 @@ const ModalForm: React.FC<ModalFormProps> = ({
                   style={{ display: "none" }}
                 />
                 {isLoading && <Spin />}
-                {field.value.map(
-                  (image: string, index: number) =>
-                    (image || initialData?.images[0]) && (
-                      <Space key={index}>
-                        <img
-                          src={image || initialData?.images[0]}
-                          alt="product"
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <DeleteOutlined
-                          onClick={() => setValue("images", [""])}
-                        />
-                      </Space>
-                    )
-                )}
+                {getValues("images").map((image, index) => {
+                  const imageValue = image.replace(/["\[\]]/g, "");
+                  return (
+                    <Space key={index}>
+                      <img
+                        src={imageValue}
+                        alt="product"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <DeleteOutlined
+                        onClick={() => setValue("images", [""])}
+                      />
+                    </Space>
+                  );
+                })}
                 <Upload beforeUpload={beforeUpload} showUploadList={false}>
                   <Button icon={<UploadOutlined />}>Upload Image</Button>
                 </Upload>

@@ -15,10 +15,11 @@ import {
   ProductItem,
   createProduct,
   deleteProduct,
+  editProduct,
   getListProduct,
 } from "@/services";
 import dayjs from "dayjs";
-import { Button } from "@/components/atoms/button";
+import { Button } from "@/components/atoms";
 import { TitlePage } from "@/components/atoms/typography";
 import { getListCategories } from "@/services/category";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -55,7 +56,8 @@ const ProductPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize] = useState<number>(5);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editData, setEditData] = useState<ProductItem & { id?: number }>();
+  const [editData, setEditData] = useState<ProductItem>();
+  const [editIdData, setEditIdData] = useState<number | undefined>(undefined);
 
   const queryClient = useQueryClient();
   const { data: categories } = useQuery<Category[]>({
@@ -73,36 +75,6 @@ const ProductPage = () => {
     ...getListProduct({ params: endpointParams }),
     refetchOnMount: false,
   });
-  const createProductMutation = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      message.success("Product created successfully");
-      queryClient.refetchQueries();
-      setIsModalVisible(false);
-    },
-    onError: () => {
-      message.error("Failed to create product");
-    },
-  });
-  const handleCreateProduct = async (productData: ProductItem) => {
-    createProductMutation.mutate(productData);
-  };
-
-  const editProductMutation = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      message.success("Product updated successfully");
-      queryClient.refetchQueries();
-      setIsModalVisible(false);
-    },
-    onError: () => {
-      message.error("Failed to update product");
-    },
-  });
-
-  const handleEditProduct = async (productData: ProductItem) => {
-    editProductMutation.mutate(productData);
-  };
 
   const deleteProductMutation = useMutation({
     mutationFn: deleteProduct,
@@ -170,13 +142,13 @@ const ProductPage = () => {
             style={{ color: "green" }}
             onClick={() => {
               setEditData({
-                id: record.id,
                 title: record.title,
                 price: record.price,
                 description: record.description,
                 images: record.images,
                 categoryId: record.category.id,
               });
+              setEditIdData(record.id);
               setIsModalVisible(true);
             }}
           />
@@ -251,9 +223,9 @@ const ProductPage = () => {
       <ModalForm
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        onSubmit={handleCreateProduct}
         categories={categories}
         initialData={editData}
+        id={editIdData}
       />
     </>
   );
