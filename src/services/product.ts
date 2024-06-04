@@ -9,6 +9,13 @@ export type Product = {
   categoryId: number;
   images: string[];
 };
+export interface ProductItem {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+}
 
 export const getListProduct = ({
   params
@@ -32,17 +39,17 @@ export const getProductDetail = (id: number) => ({
   queryFn: () => API.get(`${ENDPOINTS.PRODUCT}/${id}`)
 });
 
-export const createProduct = (data: Product) => ({
-  key: [ENDPOINTS.PRODUCT],
-  fn: () => API.post(ENDPOINTS.PRODUCT, data)
-});
 
 export const updateProduct = (id: number, data: Product) => ({
   key: [ENDPOINTS.PRODUCT, id],
   fn: () => API.put(`${ENDPOINTS.PRODUCT}/${id}`, data)
 });
 
-export const deleteProduct = (id: number) => ({
-  key: [ENDPOINTS.PRODUCT, id],
-  fn: () => API.delete(`${ENDPOINTS.PRODUCT}/${id}`)
-});
+export const createProduct = async (data: ProductItem) => {
+  const response = await API.post(ENDPOINTS.PRODUCT, data);
+  return response.data;
+};
+
+export const deleteProduct = async (id: number) => {
+  await API.delete(`${ENDPOINTS.PRODUCT}/${id}`);
+}
