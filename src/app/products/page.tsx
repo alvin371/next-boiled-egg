@@ -9,17 +9,15 @@ import {
   Typography,
   message,
   Popconfirm,
+  Button,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
   ProductItem,
-  createProduct,
   deleteProduct,
-  editProduct,
   getListProduct,
 } from "@/services";
 import dayjs from "dayjs";
-import { Button } from "@/components/atoms";
 import { TitlePage } from "@/components/atoms/typography";
 import { getListCategories } from "@/services/category";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
